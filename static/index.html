@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bee Bytez — Code Scanner & Hive Search</title>
+    <meta name="description"
+        content="Scan your code, find bugs, search any codebase with the hive. Local-first, zero footprint.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <!-- Floating Bees -->
+    <div class="bee">🐝</div>
+    <div class="bee">🐝</div>
+    <div class="bee">🐝</div>
+    <div class="bee">🐝</div>
+    <div class="bee">🐝</div>
+    <div class="bee">🐝</div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-brand">
+            <div class="logo-icon">🐝</div>
+            <div>
+                <h1>Bee Bytez</h1>
+                <p class="subtitle">Code Scanner & Hive Search</p>
+            </div>
+        </div>
+        <div class="header-status" id="status">
+            <span class="status-dot"></span>
+            Ready
+        </div>
+        <button class="cache-btn" id="cache-btn" onclick="toggleCache()" title="Manage cache">🗑️ Cache</button>
+    </header>
+
+    <main class="container">
+        <!-- Left Column: Controls -->
+        <section class="panel controls-panel">
+            <h2 class="panel-title">
+                <span class="panel-icon">🍯</span>
+                Target
+            </h2>
+
+            <div class="drop-zone" id="drop-zone">
+                <div class="drop-zone-content" id="drop-zone-content">
+                    <div class="drop-zone-icon">🌻</div>
+                    <p class="drop-zone-text">Drop files or folders here</p>
+                    <p class="drop-zone-sub">or type a path below</p>
+                </div>
+                <div class="drop-zone-active" id="drop-zone-active">
+                    <div class="drop-zone-icon pulse-icon">⬇️</div>
+                    <p class="drop-zone-text">Release to scan</p>
+                </div>
+                <div class="drop-zone-files" id="drop-zone-files" style="display: none;"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="scan-path">Or enter path manually</label>
+                <input type="text" id="scan-path" placeholder="/path/to/your/code" spellcheck="false">
+            </div>
+
+            <h2 class="panel-title" style="margin-top: 1.5rem;">
+                <span class="panel-icon">🐝</span>
+                Calibration
+            </h2>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-preset="quick">Quick Lint</button>
+                <button class="preset-btn active" data-preset="default">Standard</button>
+                <button class="preset-btn" data-preset="security">Security</button>
+                <button class="preset-btn" data-preset="full">Full Scan</button>
+            </div>
+
+            <div class="level-toggles">
+                <label class="toggle-row">
+                    <input type="checkbox" class="level-check" data-level="1" checked>
+                    <span class="toggle-label">
+                        <span class="level-badge l1">1</span>
+                        Lint
+                    </span>
+                    <span class="toggle-desc">Typos, TODOs, naming</span>
+                </label>
+                <label class="toggle-row">
+                    <input type="checkbox" class="level-check" data-level="2" checked>
+                    <span class="toggle-label">
+                        <span class="level-badge l2">2</span>
+                        Bug Hunt
+                    </span>
+                    <span class="toggle-desc">Exceptions, equality, defaults</span>
+                </label>
+                <label class="toggle-row">
+                    <input type="checkbox" class="level-check" data-level="3">
+                    <span class="toggle-label">
+                        <span class="level-badge l3">3</span>
+                        Security
+                    </span>
+                    <span class="toggle-desc">Injection, secrets, timing</span>
+                </label>
+                <label class="toggle-row">
+                    <input type="checkbox" class="level-check" data-level="4">
+                    <span class="toggle-label">
+                        <span class="level-badge l4">4</span>
+                        AI Safety
+                    </span>
+                    <span class="toggle-desc">Prompt injections, encoded strings</span>
+                </label>
+            </div>
+
+            <button class="scan-btn" id="scan-btn" onclick="runScan()">
+                <span class="scan-btn-icon">🐝</span>
+                Scan
+            </button>
+
+            <!-- Hive Search: Custom keyword search via Rust seeder -->
+            <div class="hive-search-section">
+                <h2 class="panel-title" style="margin-top: 1.5rem;">
+                    <span class="panel-icon">🔍</span>
+                    Hive Search
+                </h2>
+                <p class="hive-search-desc">Search any codebase by keywords using the Rust seeder engine</p>
+                <div class="search-terms-grid">
+                    <input type="text" id="term-1" class="search-term-input" placeholder="Keyword 1" spellcheck="false">
+                    <input type="text" id="term-2" class="search-term-input" placeholder="Keyword 2" spellcheck="false">
+                    <input type="text" id="term-3" class="search-term-input" placeholder="Keyword 3" spellcheck="false">
+                    <input type="text" id="term-4" class="search-term-input" placeholder="Keyword 4" spellcheck="false">
+                </div>
+                <button class="scan-btn hive-btn" id="hive-btn" onclick="runHiveSearch()">
+                    <span>🐝</span> Hive Search
+                </button>
+            </div>
+        </section>
+
+        <!-- Center Column: Results -->
+        <section class="panel results-panel">
+            <div class="results-header">
+                <h2 class="panel-title">
+                    <span class="panel-icon">🍯</span>
+                    Findings
+                </h2>
+                <div class="stats-bar" id="stats-bar" style="display: none;">
+                    <span class="stat stat-error" id="stat-errors">0 errors</span>
+                    <span class="stat stat-warning" id="stat-warnings">0 warnings</span>
+                    <span class="stat stat-info" id="stat-infos">0 info</span>
+                </div>
+            </div>
+
+            <div class="results-list" id="results-list">
+                <div class="empty-state">
+                    <div class="empty-icon">🐝</div>
+                    <p>Point the hive at your code and hit Scan.</p>
+                    <p class="empty-sub">The bees will buzz through your code for findings.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Prompt Output -->
+        <section class="panel prompt-panel">
+            <div class="prompt-header">
+                <h2 class="panel-title">
+                    <span class="panel-icon">🐝</span>
+                    AI Prompt
+                </h2>
+                <button class="copy-btn" id="copy-btn" onclick="copyPrompt()" style="display: none;">
+                    📋 Copy
+                </button>
+            </div>
+            <div class="prompt-output" id="prompt-output">
+                <div class="empty-state">
+                    <div class="empty-icon">🍯</div>
+                    <p>Your AI-ready prompt will appear here.</p>
+                    <p class="empty-sub">Sweet honey for any AI agent — it'll know exactly where to look.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

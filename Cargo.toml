@@ -1,0 +1,11 @@
+[package]
+name = "bee-bytez"
+version = "0.1.0"
+edition = "2024"
+default-run = "bee-bytez"
+
+[[bin]]
+name = "bee-bytez"
+path = "src/main.rs"
+
+[dependencies]

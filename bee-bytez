@@ -1,0 +1,29 @@
+#!/bin/bash
+# ╔══════════════════════════════════════════════════╗
+# ║   🐝 Bee Bytez — Code Scanner & Hive Search     ║
+# ║   Your code stays on YOUR machine.               ║
+# ╚══════════════════════════════════════════════════╝
+#
+# Usage:
+#   ./bee-bytez              Launch the UI (opens browser)
+#   ./bee-bytez --no-browser Launch headless (for scripts/CI)
+#   ./bee-bytez --port 8080  Use a custom port
+#
+# Power users: use the Rust CLI directly:
+#   ./target/release/bee-bytez /path/to/code --json-query "search terms"
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Check Python
+if ! command -v python3 &>/dev/null; then
+    echo "❌ Python 3 is required. Install it and try again."
+    exit 1
+fi
+
+# Check Flask
+python3 -c "import flask" 2>/dev/null || {
+    echo "📦 Installing Flask..."
+    pip3 install --user flask
+}
+
+exec python3 "$DIR/app.py" "$@"
