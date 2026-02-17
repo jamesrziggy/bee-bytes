@@ -14,13 +14,23 @@ Bee Bytez is a local tool. It runs a tiny server on YOUR computer and opens YOUR
 
 Your browser opens. That's it. Start scanning.
 
-### What You Can Do
+### 🔍 Code Scanner (Python — works out of the box)
 
 1. **Drop a folder** into the drop zone (or type a path)
-2. **Pick a calibration level** — from quick lint checks to full security scans
-3. **Hit Scan** — findings show up with exact line numbers so you can fix them
-4. **Hive Search** — type up to 4 keywords, the Rust engine finds the most relevant code chunks in milliseconds
-5. **Copy Prompt** — if you want AI help, hit Copy and paste the prompt into ChatGPT/Claude/whatever
+2. **Pick a calibration level** — Lint, Bug Hunt, Security, or AI Safety
+3. **Hit Scan** — findings show up with exact line numbers
+4. **Copy the AI Prompt** — paste into ChatGPT/Claude/whatever to get fix suggestions
+
+### 🐝 Hive Search (Rust — needs to be compiled first, see below)
+
+Hive Search is a keyword-based code search powered by the Rust seeder. It finds the most relevant chunks of code across your entire codebase in milliseconds.
+
+1. **Type a folder path** into the path box at the top (drag-and-drop works for scanning but not Hive Search yet)
+2. **Enter 1–4 keywords** in the Hive Search section at the bottom of the left panel
+3. **Hit 🐝 Hive Search** — results show with file names, line numbers, relevance scores, and code previews
+4. **Copy the AI Prompt** — the right panel auto-builds a prompt with all the relevant code chunks, ready to paste
+
+> **Note:** Hive Search requires the Rust binary to be compiled first. See the [Building the Rust Seeder](#-building-the-rust-seeder-hive-search-engine) section below.
 
 ### Cache
 
